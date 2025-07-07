@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✅ تم رفع موقعك</title>
+  <style>
+    body {
+      background: #0a0a0a;
+      color: #0cf;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    .card {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #0cf;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #0cf;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎉 تم رفع موقعك بنجاح</h1>
+    <p>📎 رابط الموقع:</p>
+    <p><a id="siteUrl" href="__SITE_URL__" target="_blank">__SITE_URL__</a></p>
+    <button onclick="copyLink()">📋 نسخ الرابط</button>
+    <button onclick="window.open('__SITE_URL__')">🌐 زيارة الموقع</button>
+  </div>
+
+  <script>
+    function copyLink() {
+      navigator.clipboard.writeText("__SITE_URL__").then(() => {
+        alert("✔ تم نسخ الرابط!");
+      });
+    }
+  </script>
+</body>
+</html>
