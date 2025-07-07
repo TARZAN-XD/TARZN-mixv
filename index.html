@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 استضافة مواقعك</title>
+  <style>
+    body {
+      background: #111;
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    form {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    input[type="file"], button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background-color: #0cf;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    a {
+      color: #0cf;
+      display: block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌐 استضافة موقعك الثابت</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required>
+    <br>
+    <button type="submit">🔼 رفع الملفات</button>
+  </form>
+  <a href="/all-sites">📂 عرض المواقع المرفوعة</a>
+  <footer>
+    <p>💎 تم التطوير بواسطة <strong>طرزان الواقدي</strong></p>
+  </footer>
+</body>
+</html>
