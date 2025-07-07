@@ -1,7 +1,7 @@
 {
-  "name": "tarzan-html-hosting",
+  "name": "tarzan-hosting",
   "version": "1.0.0",
-  "description": "منصة استضافة مواقع HTML بواسطة طرزان الواقدي",
+  "description": "استضافة مواقع HTML ثابتة بواسطة طرزان الواقدي",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
