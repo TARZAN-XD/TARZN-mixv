@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📂 المواقع المرفوعة</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #0ff;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .site-card {
+      background: #222;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px #0ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      word-break: break-word;
+      transition: background 0.3s ease;
+    }
+    .site-card:hover {
+      background: #0b3a48;
+    }
+    .url-text {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: #0ff;
+      user-select: all;
+      max-width: 100%;
+    }
+    .buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button, a {
+      background: #0cf;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+      min-width: 100px;
+    }
+    button:hover, a:hover {
+      background: #09a;
+    }
+    .time {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #777;
+    }
+
+    /* Responsive */
+    @media (min-width: 600px) {
+      .site-card {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .url-text {
+        flex: 1;
+        text-align: left;
+        margin-bottom: 0;
+        margin-right: 20px;
+      }
+      .buttons {
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>📂 المواقع التي تم رفعها</h1>
+  <div class="container" id="sitesContainer">
+    <!-- هنا سيتم إدخال المواقع بواسطة جافاسكريبت -->
+  </div>
+
+  <script>
+    async function fetchSites() {
+      try {
+        const res = await fetch('/sites.json');
+        const sites = await res.json();
+
+        const container = document.getElementById('sitesContainer');
+        container.innerHTML = '';
+
+        if(sites.length === 0){
+          container.innerHTML = '<p>لا توجد مواقع مرفوعة حتى الآن.</p>';
+          return;
+        }
+
+        sites.forEach(site => {
+          const card = document.createElement('div');
+          card.className = 'site-card';
+
+          const urlText = document.createElement('div');
+          urlText.className = 'url-text';
+          urlText.textContent = site.url;
+
+          const btnCopy = document.createElement('button');
+          btnCopy.textContent = '📋 نسخ';
+          btnCopy.onclick = () => {
+            navigator.clipboard.writeText(site.url).then(() => alert('✅ تم نسخ الرابط!'));
+          };
+
+          const btnVisit = document.createElement('a');
+          btnVisit.href = site.url;
+          btnVisit.target = '_blank';
+          btnVisit.textContent = '🌐 زيارة';
+
+          const timeSpan = document.createElement('div');
+          timeSpan.className = 'time';
+          timeSpan.textContent = `⏱️ ${new Date(site.time).toLocaleString()}`;
+
+          const buttonsDiv = document.createElement('div');
+          buttonsDiv.className = 'buttons';
+          buttonsDiv.appendChild(btnCopy);
+          buttonsDiv.appendChild(btnVisit);
+
+          card.appendChild(urlText);
+          card.appendChild(buttonsDiv);
+          card.appendChild(timeSpan);
+
+          container.appendChild(card);
+        });
+      } catch (e) {
+        document.getElementById('sitesContainer').innerHTML = '<p>خطأ في تحميل المواقع.</p>';
+      }
+    }
+
+    fetchSites();
+  </script>
+</body>
+</html>
