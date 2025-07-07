@@ -1,4 +1,3 @@
-// 🚀 سيرفر استضافة مواقع HTML بواسطة طرزان الواقدي
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
@@ -6,101 +5,69 @@ const path = require("path");
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // إعداد التخزين
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const siteID = uuidv4();
-    const sitePath = path.join(__dirname, "uploads", siteID);
-    fs.mkdirSync(sitePath, { recursive: true });
-    req.siteID = siteID;
-    cb(null, sitePath);
+    const folderName = uuidv4();
+    const dir = path.join(__dirname, "uploads", folderName);
+    fs.mkdirSync(dir, { recursive: true });
+    req.folderPath = dir;
+    req.folderName = folderName;
+    cb(null, dir);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
 });
+
 const upload = multer({ storage });
 
-// ملفات ثابتة
+// إعداد المجلدات الثابتة
 app.use("/sites", express.static(path.join(__dirname, "uploads")));
-app.use(express.static(path.join(__dirname, "views")));
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-// ⬅️ صفحة البداية
+// عرض صفحة الرفع
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// 🔼 رفع الملفات
+// رفع الملفات
 app.post("/upload", upload.array("files"), (req, res) => {
-  const siteID = req.siteID;
-  const link = `/sites/${siteID}/index.html`;
-  const fullURL = req.protocol + "://" + req.get("host") + link;
+  const fullUrl = req.protocol + "://" + req.get("host") + "/sites/" + req.folderName;
+  const time = new Date().toISOString();
 
-  // حفظ في سجل JSON
-  const logPath = path.join(__dirname, "sites.json");
-  let sites = [];
-  if (fs.existsSync(logPath)) {
-    sites = JSON.parse(fs.readFileSync(logPath));
+  let data = [];
+  const filePath = path.join(__dirname, "sites.json");
+  if (fs.existsSync(filePath)) {
+    data = JSON.parse(fs.readFileSync(filePath));
   }
-  sites.unshift({ id: siteID, url: fullURL, time: new Date().toISOString() });
-  fs.writeFileSync(logPath, JSON.stringify(sites, null, 2));
+  data.push({ url: fullUrl, time });
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
-  // عرض صفحة النجاح
-  fs.readFile(path.join(__dirname, "views", "uploaded.html"), "utf8", (err, data) => {
-    const html = data.replace(/__SITE_URL__/g, fullURL);
-    res.send(html);
+  fs.readFile(path.join(__dirname, "views", "uploaded.html"), "utf8", (err, html) => {
+    if (err) return res.send("حدث خطأ!");
+    const updated = html.replace(/__SITE_URL__/g, fullUrl);
+    res.send(updated);
   });
 });
 
-// 📂 عرض كل المواقع المرفوعة
+// عرض جميع المواقع المرفوعة
 app.get("/all-sites", (req, res) => {
-  const logPath = path.join(__dirname, "sites.json");
-  let sites = [];
-  if (fs.existsSync(logPath)) {
-    sites = JSON.parse(fs.readFileSync(logPath));
-  }
-
-  let items = sites.map(site => `
-    <div class="site-card">
-      <p><strong>📎</strong> ${site.url}</p>
-      <button onclick="copyLink('${site.url}')">📋 نسخ</button>
-      <a href="${site.url}" target="_blank">🌐 زيارة</a>
-      <span class="time">⏱️ ${new Date(site.time).toLocaleString()}</span>
-    </div>
-  `).join("");
-
-  const page = `
-    <html lang="ar">
-    <head>
-      <meta charset="UTF-8">
-      <title>📂 المواقع المرفوعة</title>
-      <style>
-        body { background:#111; color:#fff; font-family:sans-serif; padding:20px; text-align:center; }
-        .site-card { background:#222; border-radius:10px; padding:15px; margin:10px auto; width:90%; max-width:500px; box-shadow:0 0 10px #0ff; }
-        .site-card button, .site-card a { margin:5px; padding:10px 15px; background:#0cf; color:white; border:none; border-radius:8px; cursor:pointer; text-decoration:none; display:inline-block; }
-        .site-card a:hover, .site-card button:hover { background:#09a; }
-        .time { display:block; margin-top:10px; font-size:0.8rem; color:#aaa; }
-      </style>
-    </head>
-    <body>
-      <h1>📂 المواقع التي تم رفعها</h1>
-      ${items}
-      <script>
-        function copyLink(link) {
-          navigator.clipboard.writeText(link).then(() => alert('✅ تم نسخ الرابط!'));
-        }
-      </script>
-    </body>
-    </html>
-  `;
-
-  res.send(page);
+  res.sendFile(path.join(__dirname, "views", "all-sites.html"));
 });
 
-// 🚀 بدء السيرفر
+// عرض البيانات بصيغة JSON
+app.get("/sites.json", (req, res) => {
+  const filePath = path.join(__dirname, "sites.json");
+  if (!fs.existsSync(filePath)) return res.json([]);
+  const data = JSON.parse(fs.readFileSync(filePath));
+  res.json(data);
+});
+
+// تشغيل السيرفر
 app.listen(PORT, () => {
-  console.log(`✅ يعمل على http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
