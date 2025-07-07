@@ -1,48 +1,113 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>✅ تم رفع موقعك</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
     body {
-      background: #0a0a0a;
-      color: #0cf;
-      font-family: sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #0a3d62, #1e3799);
+      color: #d1e8ff;
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
       text-align: center;
-      padding: 50px;
     }
     .card {
-      background: #111;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #0cf;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px 25px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px #0097e6cc;
+      max-width: 440px;
+      width: 100%;
+      user-select: none;
     }
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      border: none;
-      border-radius: 8px;
-      background: #0cf;
-      color: white;
-      font-weight: bold;
+    h1 {
+      font-size: 2.6rem;
+      margin-bottom: 30px;
+      color: #00a8ff;
+      text-shadow: 0 0 15px #00a8ffbb;
+    }
+    p {
+      font-size: 1.2rem;
+      margin: 15px 0 8px;
+    }
+    a#siteUrl {
+      color: #00c0ff;
+      font-weight: 700;
+      font-size: 1.15rem;
+      word-break: break-all;
+      display: block;
+      margin-bottom: 25px;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(0, 200, 255, 0.15);
+      box-shadow: 0 0 8px #00c0ff44;
       cursor: pointer;
+      user-select: text;
+    }
+    a#siteUrl:hover {
+      background: rgba(0, 200, 255, 0.3);
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px 12px 0;
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0a0a0a;
+      background: #00c0ff;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 18px #00c0ffcc;
+      transition: background 0.3s ease;
+      text-decoration: none;
+      user-select: none;
+    }
+    .btn:hover {
+      background: #0091ca;
+      color: #fff;
+      box-shadow: 0 0 25px #0091cacc;
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      p, a#siteUrl, .btn {
+        font-size: 1rem;
+        padding: 12px 20px;
+      }
+      .card {
+        padding: 20px 15px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="card">
+  <div class="card" role="main" aria-label="معلومات رفع الموقع">
     <h1>🎉 تم رفع موقعك بنجاح</h1>
     <p>📎 رابط الموقع:</p>
-    <p><a id="siteUrl" href="__SITE_URL__" target="_blank">__SITE_URL__</a></p>
-    <button onclick="copyLink()">📋 نسخ الرابط</button>
-    <button onclick="window.open('__SITE_URL__')">🌐 زيارة الموقع</button>
+    <a id="siteUrl" href="__SITE_URL__" target="_blank" rel="noopener noreferrer" aria-label="رابط الموقع">__SITE_URL__</a>
+
+    <button class="btn" onclick="copyLink()" aria-label="نسخ رابط الموقع">📋 نسخ الرابط</button>
+    <a class="btn" href="__SITE_URL__" target="_blank" rel="noopener noreferrer" aria-label="زيارة الموقع">🌐 زيارة الموقع</a>
   </div>
 
   <script>
     function copyLink() {
       navigator.clipboard.writeText("__SITE_URL__").then(() => {
         alert("✔ تم نسخ الرابط!");
+      }).catch(() => {
+        alert("❌ لم يتم نسخ الرابط، حاول مرة أخرى.");
       });
     }
   </script>
