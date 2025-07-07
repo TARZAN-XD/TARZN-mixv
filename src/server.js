@@ -15,7 +15,6 @@ const storage = multer.diskStorage({
     const folderName = uuidv4();
     const dir = path.join(rootDir, "uploads", folderName);
     fs.mkdirSync(dir, { recursive: true });
-    req.folderPath = dir;
     req.folderName = folderName;
     cb(null, dir);
   },
@@ -26,16 +25,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// مجلدات ثابتة
+// عرض الملفات الثابتة
 app.use("/sites", express.static(path.join(rootDir, "uploads")));
 app.use(express.urlencoded({ extended: true }));
 
-// الصفحة الرئيسية (رفع)
+// صفحة الرفع
 app.get("/", (req, res) => {
   res.sendFile(path.join(rootDir, "views", "index.html"));
 });
 
-// عند الرفع
+// رفع الملفات
 app.post("/upload", upload.array("files"), (req, res) => {
   const siteUrl = req.protocol + "://" + req.get("host") + "/sites/" + req.folderName;
   const time = new Date().toISOString();
